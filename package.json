@@ -1,0 +1,22 @@
+{
+  "name": "@bloombug/maintenance-task",
+  "version": "0.1.0",
+  "author": "Ryan Macdonald <hi@ryanmacdonald.ca>",
+  "description": "Some helpers for running maintenance tasks",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/macdonaldr93/maintenance-task-js.git"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "tslib": "^2"
+  },
+  "devDependencies": {
+    "@types/node": "^20"
+  }
+}
