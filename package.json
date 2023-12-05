@@ -1,6 +1,6 @@
 {
   "name": "@bloombug/maintenance-task",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Ryan Macdonald <hi@ryanmacdonald.ca>",
   "description": "Some helpers for running maintenance tasks",
   "license": "MIT",
