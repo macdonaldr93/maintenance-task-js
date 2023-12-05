@@ -30,11 +30,11 @@ class MaintenanceRunner {
     async run(task) {
         const taskRun = await this.enqueue(task);
         this.startTime = process.hrtime();
+        taskRun.status = 'running';
+        this.logger?.info(`${task.name} running...`);
         const items = await task.collection({ runner: this, taskRun });
         this.itemSize = items.length;
         this.logger?.info(`${task.name} collected ${items.length} records`);
-        this.logger?.info(`${task.name} running...`);
-        taskRun.status = 'running';
         try {
             await this.taskRunUpdate(taskRun);
             await this.process(task, taskRun, items);
@@ -43,6 +43,7 @@ class MaintenanceRunner {
         catch (err) {
             await this.fail(task, taskRun, err);
         }
+        return taskRun;
     }
     async enqueue(task) {
         this.logger?.info(`${task.name} enqueuing...`);

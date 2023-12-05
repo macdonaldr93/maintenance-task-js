@@ -10,7 +10,7 @@ export interface TaskRunCreateInput {
 }
 
 export type TaskRunCreateFn = (input: TaskRunCreateInput) => Promise<TaskRun>;
-export type TaskRunUpdateFn = (input: TaskRun) => Promise<TaskRun>;
+export type TaskRunUpdateFn = (input: TaskRun) => Promise<void>;
 export type GenerateIdFn = () => string;
 
 export interface MaintenanceRunnerOptions {
@@ -55,16 +55,17 @@ export class MaintenanceRunner<Entity = any> {
     this.taskRunUpdate = taskRunUpdate;
   }
 
-  async run(task: MaintenanceTask<Entity>) {
+  async run(task: MaintenanceTask<Entity>): Promise<TaskRun> {
     const taskRun = await this.enqueue(task);
     this.startTime = process.hrtime();
+    taskRun.status = 'running';
+
+    this.logger?.info(`${task.name} running...`);
+
     const items = await task.collection({ runner: this, taskRun });
     this.itemSize = items.length;
 
     this.logger?.info(`${task.name} collected ${items.length} records`);
-    this.logger?.info(`${task.name} running...`);
-
-    taskRun.status = 'running';
 
     try {
       await this.taskRunUpdate(taskRun);
@@ -73,6 +74,8 @@ export class MaintenanceRunner<Entity = any> {
     } catch (err) {
       await this.fail(task, taskRun, err);
     }
+
+    return taskRun;
   }
 
   private async enqueue(task: MaintenanceTask<Entity>) {

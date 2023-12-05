@@ -8,7 +8,7 @@ export interface TaskRunCreateInput {
     taskName: string;
 }
 export type TaskRunCreateFn = (input: TaskRunCreateInput) => Promise<TaskRun>;
-export type TaskRunUpdateFn = (input: TaskRun) => Promise<TaskRun>;
+export type TaskRunUpdateFn = (input: TaskRun) => Promise<void>;
 export type GenerateIdFn = () => string;
 export interface MaintenanceRunnerOptions {
     generateId: GenerateIdFn;
@@ -28,7 +28,7 @@ export declare class MaintenanceRunner<Entity = any> {
     taskRunUpdate: TaskRunUpdateFn;
     get timeRunning(): number;
     constructor({ generateId, logger, taskRunCreate, taskRunUpdate, }: MaintenanceRunnerOptions);
-    run(task: MaintenanceTask<Entity>): Promise<void>;
+    run(task: MaintenanceTask<Entity>): Promise<TaskRun>;
     private enqueue;
     private process;
     private complete;
